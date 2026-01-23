@@ -149,6 +149,11 @@ func main() {
 		})
 	})
 
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(`{"message":"Go REST API is running"}`))
+	})
+
 	fmt.Println("Server running in localhost:8080")
 
 	err := http.ListenAndServe(":8080", nil)
