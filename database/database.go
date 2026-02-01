@@ -8,8 +8,6 @@ import (
 )
 
 func InitDB(connectionString string) (*sql.DB, error) {
-	log.Println("DB_CONN FROM APP:", connectionString)
-
 	// Open database
 	db, err := sql.Open("pgx", connectionString)
 	if err != nil {
