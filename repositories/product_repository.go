@@ -14,14 +14,20 @@ func NewProductRepository(db *sql.DB) *ProductRepository {
 	return &ProductRepository{db: db}
 }
 
-func (r *ProductRepository) GetAll() ([]models.Product, error) {
+func (r *ProductRepository) GetAll(nameFilter string) ([]models.Product, error) {
 	query := `
         SELECT p.id, p.name, p.price, p.stock, p.category_id,
                c.id, c.name, c.description
         FROM products p
         LEFT JOIN categories c ON p.category_id = c.id
     `
-	rows, err := r.db.Query(query)
+	args := []interface{}{}
+	if nameFilter != "" {
+		query += " WHERE p.name ILIKE $1"
+		args = append(args, "%"+nameFilter+"%")
+	}
+
+	rows, err := r.db.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
